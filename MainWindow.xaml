@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Alg_03"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="MainWindow" Height="200" Width="510">
+    <Grid Margin="0,0,0,-1">
+        <Label Content="Find what" FontSize="15" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.395,-0.385" Height="30" Width="125"/>
+        <TextBox HorizontalAlignment="Left" FontSize="15" Height="30" Margin="140,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="260"/>
+        <Button Content="Find" HorizontalAlignment="Left" FontSize="15" Margin="405,10,0,0" VerticalAlignment="Top" Width="90" Height="30"/>
+        <CheckBox Content="Match whole world only" FontSize="15" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" Height="35" Width="230"/>
+        <CheckBox Content="Match case" FontSize="15" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Width="230" Height="31"/>
     </Grid>
 </Window>
