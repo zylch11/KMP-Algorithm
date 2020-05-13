@@ -17,35 +17,70 @@ using System.Windows.Shapes;
 
 namespace Alg_03
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+
     public partial class MainWindow : Window
     {
-        //variables
         int fileCount = 0;
         string[] fileArray = new string[10];
+		bool checkCase = false;
 
         public MainWindow()
         {
             InitializeComponent();
         }
 
+		char convertPatToUppercase(int index, string pat)
+		{
+			char result = pat[index];
+			Char.ToUpper(result);
+			return result;
+		}
+
+		internal void KMPSearchwithCase(string pat, string txt, int row)
+		{
+			int M = pat.Length;
+			int N = txt.Length;
+
+			int[] lps = new int[M];
+			int j = 0;
+
+			computeLPSArray(pat, M, lps);
+
+			int i = 0;
+			while (i < N)
+			{
+				if (pat[j] == txt[i] || pat[j] == Char.ToUpper(txt[i]) || pat[j] == Char.ToLower(txt[i]) || Char.ToLower(pat[j]) == txt[i])
+				{
+					j++;
+					i++;
+				}
+				if (j == M)
+				{
+					txtResults.Text += "column: " + (i - j) + "\nrow: " + row + "\n";
+					j = lps[j - 1];
+				}
+
+				else if (i < N && pat[j] != txt[i])
+				{
+					if (j != 0)
+						j = lps[j - 1];
+					else
+						i = i + 1;
+				}
+			}
+		}
+
 		internal void KMPSearch(string pat, string txt, int row)
 		{
 			int M = pat.Length;
 			int N = txt.Length;
 
-			// create lps[] that will hold the longest 
-			// prefix suffix values for pattern 
 			int[] lps = new int[M];
-			int j = 0; // index for pat[] 
+			int j = 0;
 
-			// Preprocess the pattern (calculate lps[] 
-			// array) 
 			computeLPSArray(pat, M, lps);
 
-			int i = 0; // index for txt[] 
+			int i = 0; 
 			while (i < N)
 			{
 				if (pat[j] == txt[i])
@@ -58,12 +93,9 @@ namespace Alg_03
 					txtResults.Text += "column: " + (i - j) + "\nrow: " + row + "\n";
 					j = lps[j - 1];
 				}
-
-				// mismatch after j matches 
+ 
 				else if (i < N && pat[j] != txt[i])
 				{
-					// Do not match lps[0..lps[j-1]] characters, 
-					// they will match anyway 
 					if (j != 0)
 						j = lps[j - 1];
 					else
@@ -74,12 +106,10 @@ namespace Alg_03
 
 		void computeLPSArray(string pat, int M, int[] lps)
 		{
-			// length of the previous longest prefix suffix 
 			int len = 0;
 			int i = 1;
-			lps[0] = 0; // lps[0] is always 0 
+			lps[0] = 0; 
 
-			// the loop calculates lps[i] for i = 1 to M-1 
 			while (i < M)
 			{
 				if (pat[i] == pat[len])
@@ -88,19 +118,13 @@ namespace Alg_03
 					lps[i] = len;
 					i++;
 				}
-				else // (pat[i] != pat[len]) 
+				else
 				{
-					// This is tricky. Consider the example. 
-					// AAACAAAA and i = 7. The idea is similar 
-					// to search step. 
 					if (len != 0)
 					{
 						len = lps[len - 1];
-
-						// Also, note that we do not increment 
-						// i here 
 					}
-					else // if (len == 0) 
+					else
 					{
 						lps[i] = len;
 						i++;
@@ -118,24 +142,14 @@ namespace Alg_03
 				string pat = txtToSearch.Text;
 				int j = 0;
 				txtResults.Text += "\n" + fileName + ": \n";
+				checkCase = (bool)matchCase.IsChecked;
 				foreach (string line in lines)
 				{
 					j++;
-					KMPSearch(pat, line, j);
+					if (checkCase) { KMPSearch(pat, line, j); }
+					else { KMPSearchwithCase(pat, line, j); }
 				}
 			}
-
-			//string path = @"C:\Users\Waqas\source\repos\Alg_03\.gitignore";
-			//using (StreamReader sr = File.OpenText(path))
-			//{
-			//    string s;
-			//    while ((s = sr.ReadLine()) != null)
-			//    {
-			//        Console.WriteLine(s);
-			//    }
-			//    string text = System.IO.File.ReadAllText(path);
-			//    MessageBox.Show(count.ToString());
-			//}
 		}
 
         private void btnOpenFiles_Click(object sender, RoutedEventArgs e)
@@ -151,8 +165,12 @@ namespace Alg_03
                     fileArray[fileCount] = System.IO.Path.GetFullPath(filename);
                 }
             }
-            //MessageBox.Show(System.IO.File.ReadAllText(fileArray[fileCount]));
         }
-    }
+
+		private void Button_Click_1(object sender, RoutedEventArgs e)
+		{
+			txtResults.Text = String.Empty;
+		}
+	}
 }
 
