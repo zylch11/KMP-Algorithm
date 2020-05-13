@@ -31,7 +31,7 @@ namespace Alg_03
             InitializeComponent();
         }
 
-		internal void KMPSearch(string pat, string txt)
+		internal void KMPSearch(string pat, string txt, int row)
 		{
 			int M = pat.Length;
 			int N = txt.Length;
@@ -55,8 +55,7 @@ namespace Alg_03
 				}
 				if (j == M)
 				{
-					MessageBox.Show("Found pattern "
-								+ "at index " + (i - j));
+					txtResults.Text += "column: " + (i - j) + "\nrow: " + row + "\n";
 					j = lps[j - 1];
 				}
 
@@ -115,10 +114,14 @@ namespace Alg_03
 			for (int i = 0; i < fileCount; i++)
 			{
 				string[] lines = System.IO.File.ReadAllLines(@fileArray[fileCount]);
+				string fileName = System.IO.Path.GetFileName(fileArray[fileCount]);
 				string pat = txtToSearch.Text;
+				int j = 0;
+				txtResults.Text += "\n" + fileName + ": \n";
 				foreach (string line in lines)
 				{
-					KMPSearch(pat, line);
+					j++;
+					KMPSearch(pat, line, j);
 				}
 			}
 
@@ -148,7 +151,7 @@ namespace Alg_03
                     fileArray[fileCount] = System.IO.Path.GetFullPath(filename);
                 }
             }
-            MessageBox.Show(System.IO.File.ReadAllText(fileArray[fileCount]));
+            //MessageBox.Show(System.IO.File.ReadAllText(fileArray[fileCount]));
         }
     }
 }
